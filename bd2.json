@@ -1,0 +1,80 @@
+{
+    "grupos": [
+        {
+            "nome": "Grupo Macaco",
+            "nome_integrantes": [
+                "Isa",
+                "Julia",
+                "j.Gabriel",
+                "Alicia"
+            ],
+            "nome_praça": "Macada",
+            "lista_materiais": [
+                "cola",
+                "madeira",
+                "droga",
+                "cerveja"
+            ]
+        },
+        {
+            "nome": "Grupo Babuino",
+            "nome_integrantes": [
+                "Isaque",
+                "Raphaela",
+                "Renata"
+            ],
+            "nome_praça": "Selva",
+            "lista_materiais": [
+                "cola",
+                "madeira",
+                "droga",
+                "cerveja"
+            ],
+            "nomes": "garcia"
+        },
+        {
+            "nome": "Grupo godzilla",
+            "nome_integrantes": [
+                "Gabriel",
+                "Erick",
+                "j.Vitor",
+                "Hugo"
+            ],
+            "nome_praça": "Quintina",
+            "lista_materiais": [
+                "cola",
+                "madeira",
+                "droga",
+                "cerveja"
+            ]
+        },
+        {
+            "nome": "Grupo donk kong",
+            "nome_integrantes": [
+                "Enzo",
+                "Miguel"
+            ],
+            "nome_praça": "Quadrinha",
+            "lista_materiais": [
+                "cola",
+                "madeira",
+                "droga",
+                "cerveja"
+            ]
+        },
+        {
+            "nome": "Grupo 8",
+            "nome_integrantes": [
+                "Biro",
+                "Guilherme"
+            ],
+            "nome_praça": "redondo",
+            "lista_materiais": [
+                "cola",
+                "madeira",
+                "droga",
+                "cerveja"
+            ]
+        }
+    ]
+}
