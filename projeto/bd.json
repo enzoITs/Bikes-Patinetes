@@ -1,5 +1,5 @@
 {
-    "nomePeraça": "Praça da França",
+    "nomePraca": "Praça da França",
     "pontosBicicletas": [
         {
             "id": 1,
@@ -7,22 +7,22 @@
             "bicicletas": [
                 {
                     "id": 1,
-                    "tipo": "manual",
+                    "tipo": "Manual",
                     "valor": 5
                 },
                 {
                     "id": 2,
-                    "tipo":  "manual",
+                    "tipo": "Manual",
                     "valor": 2
                 },
                 {
                     "id": 3,
-                    "tipo": "manual",
+                    "tipo": "Manual",
                     "valor": 5
                 },
                 {
                     "id": 4,
-                    "tipo": "manual",
+                    "tipo": "Manual",
                     "valor": 2
                 }
             ]
@@ -52,7 +52,7 @@
                     "valor": 2
                 },
                 {
-                    "id": 13,
+                    "id": 9,
                     "tipo": "Eletrica",
                     "valor": 6
                 }
@@ -63,22 +63,22 @@
             "local": "C",
             "bicicletas": [
                 {
-                    "id": 9,
+                    "id": 10,
                     "tipo": "Eletrica",
                     "valor": 5
                 },
                 {
-                    "id": 10,
+                    "id": 11,
                     "tipo": "Manual",
                     "valor": 2
                 },
                 {
-                    "id": 11,
+                    "id": 12,
                     "tipo": "Eletrica",
                     "valor": 5
                 },
                 {
-                    "id": 12,
+                    "id": 13,
                     "tipo": "Manual",
                     "valor": 2
                 }
@@ -88,67 +88,40 @@
     "usuarios": [
         {
             "id": 1,
-            "nome": "biston"
+            "nome": "biston",
+            "email": "biston@ecobike.com",
+            "senha": "123",
+            "saldo": 50,
+            "alugueis": []
         },
         {
             "id": 2,
-            "nome": "Isabela"
+            "nome": "isabela",
+            "email": "isabela@ecobike.com",
+            "senha": "123",
+            "saldo": 30,
+            "alugueis": []
         },
         {
             "id": 3,
-            "nome": "Isaque"
+            "nome": "Isaque",
+            "email": "isaque@ecobike.com",
+            "senha": "123",
+            "saldo": 20,
+            "alugueis": []
         },
         {
             "id": 4,
-            "nome": "Roberto"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
-        },
-        {
-            "id": 3,
-            "nome": "Isaque"
+            "nome": "Roberto",
+            "email": "roberto@ecobike.com",
+            "senha": "123",
+            "saldo": 15,
+            "alugueis": []
         }
     ],
     "corridas": [
         {
+            "id": 1,
             "idUsuario": 1,
             "idBicicleta": 1,
             "idPontoPartida": 1,
@@ -157,8 +130,9 @@
             "duracao": "00:05:00"
         },
         {
+            "id": 2,
             "idUsuario": 4,
-            "idBicicleta": 13,
+            "idBicicleta": 9,
             "idPontoPartida": 2,
             "idPontoChegada": 3,
             "inicio": "30/11/2025 10:35:00",

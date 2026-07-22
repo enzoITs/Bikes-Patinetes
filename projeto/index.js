@@ -1,357 +1,76 @@
-const prompt = require('prompt-sync')();
 const fs = require('fs');
 const path = require('path');
 
+const DB_PATH = path.join(__dirname, 'bd.json');
+
 function loadDB() {
     try {
-        const raw = fs.readFileSync("./bd.json", `utf8`)
-        return JSON.parse(raw)
+        const raw = fs.readFileSync(DB_PATH, 'utf8');
+        return JSON.parse(raw);
     } catch (err) {
-        console.error("Erro ao ler bd.json", err.message)
+        console.error("Erro ao ler bd.json:", err.message);
         return {
-            nomePraça: '',
-            pontosBicicletas: '',
-            usuarios: '',
-            corridas: '',
-        }
+            nomePraca: "Praça da França",
+            pontosBicicletas: [],
+            usuarios: [],
+            corridas: []
+        };
     }
 }
 
-
-let db = loadDB();
-
-console.log(db["usuarios"][0]["nome"])
-//----------------------------------------
-console.log(db["corridas"][0]["inicio"])
-//----------------------------------------
-console.log(db["pontosBicicletas"][1]["bicicletas"])
-//----------------------------------------
-console.log(db["pontosBicicletas"][2]["bicicletas"][3]["tipo"])
-
 function saveDB(db) {
     try {
-        fs.writeFileSync("./bd.json", JSON.stringify(db, null, 4), 'utf8');
+        fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 4), 'utf8');
         return true;
     } catch (err) {
-        console.error('Erro ao salvar bd.json', err.message);
+        console.error('Erro ao salvar bd.json:', err.message);
         return false;
     }
 }
 
-db["usuarios"][1]["nome"] = "Isabela";
-db["usuarios"].push({"id": 3,"nome": "Isaque"})
-saveDB(db);
-// function getNextId() {
-//     const db = loadDB();
-
-//     const value = db.name || [];
-
-//     let maxId = 0;
-//     for (let i = 0; i < usuarios.length; i++) {
-//         const u = usuarios[i];
-//         if (typeof u.id === 'number' && u.id > maxId) {
-//             maxId = u.id;
-//         }
-//     }
-//     const newId = maxId !== 0 ? maxId + 1 : 1; //if ternario
-//     //condição (true ou false) ? valor se verdadeiro : valor se falso
-// }
-
-for(let i = 0; i < db["pontosBicicletas"][0]["bicicletas"].length; i++) {
-    db["pontosBicicletas"][0]["bicicletas"][i]["tipo"] = "manual"
+function getNextId(lista) {
+    if (!Array.isArray(lista) || lista.length === 0) return 1;
+    let maxId = 0;
+    for (const item of lista) {
+        if (typeof item.id === 'number' && item.id > maxId) {
+            maxId = item.id;
+        }
+    }
+    return maxId + 1;
 }
 
-db["usuarios"][1]["nome"] = "isabela";
-console.log(db["usuarios"][1])
+// Leitura e verificação do BD
+let db = loadDB();
 
-db["pontosBicicletas"][1]["bicicletas"].push({"id": 13,"tipo": "Eletrica", "valor": 6})
-// -------------------------------------------
-db["usuarios"].push({"id": 4,"nome": "Roberto"})
-//-------------------------------------------
-db["corridas"].push(
-    {
-        "idUsuario": 4,
-        "idBicicleta": 13,
-        "idPontoPartida": 2,
-        "idPontoChegada": 3,
-        "inicio": "30/11/2025 10:35:00",
-        "duracao": "00:05:00"
-    }
-)
-saveDB(db);
+console.log("==========================================");
+console.log(` Praça: ${db.nomePraca}`);
+console.log("==========================================");
 
-// while(true) {
-//     const sairN = prompt(`
-//         -----------------------------------------------------------------
-//         Entrar [1]
-//         Sair [2]
-//         -----------------------------------------------------------------
-//         `)
+console.log("\n--- USUÁRIOS REGISTRADOS ---");
+if (Array.isArray(db.usuarios)) {
+    db.usuarios.forEach(u => {
+        console.log(`[ID ${u.id}] Nome: ${u.nome} | Email: ${u.email || 'N/A'} | Saldo: R$ ${Number(u.saldo || 0).toFixed(2)}`);
+    });
+}
 
-//     if(sairN == '1') {
+console.log("\n--- PONTOS DE APOIO DE BICICLETAS ---");
+if (Array.isArray(db.pontosBicicletas)) {
+    db.pontosBicicletas.forEach(ponto => {
+        console.log(`Ponto ${ponto.local} (ID ${ponto.id}): ${ponto.bicicletas.length} veículo(s) disponível(is)`);
+    });
+}
 
-//     } else if (sairN == "2") {
-//         break
-//     } else {
-//         console.log('Escolha invalida')
-//         continue;
-//     }
+console.log("\n--- HISTÓRICO DE CORRIDAS ---");
+if (Array.isArray(db.corridas) && db.corridas.length > 0) {
+    db.corridas.forEach(c => {
+        console.log(`[Corrida #${c.id || 'N/A'}] Usuário ID: ${c.idUsuario} | Veículo: ${c.veiculo || c.idBicicleta} | Início: ${c.inicio}`);
+    });
+} else {
+    console.log("Nenhuma corrida registrada.");
+}
 
-//         // Variáveis globais
-//     let emailGlobal = "";
-//     let senhaGlobal = "";
-//     let lista = [];
-//     let saldo = 0;
-
-//     // ==== TELA INICIAL ====
-
-//     const inicio = prompt(`
-//     ----------------------------------------
-//     [1] Login
-//     [2] Cadastro
-//     ----------------------------------------
-//     `);
-
-//     if (inicio == "1") {
-//         console.log('Você não possui cadastro!');
-//         console.log('Vamos direcionar você para a página de cadastro!');
-//         cadastro();
-//     } else if (inicio == "2") {
-//         cadastro();
-//     } else {
-//         console.log("Opção inválida!");
-//     }
-
-    
-//     // ==== CADASTRO 2 ====
-
-//     function cadastrarUsuario() {
-
-//     }
-
-//     // ==== CADASTRO ====
-
-//     function cadastro() {
-
-//         console.log('Vamos cadastrar você!');
-
-//         const email = prompt('Digite seu email: ');
-//         const cpf = prompt("Digite seu CPF: ");
-//         const senha = prompt("Digite sua senha: ");
-//         const senha2 = prompt('Digite novamente a senha: ');
-
-//         if (senha === senha2) {
-//             console.log(`
-//     ---------------------------
-//     |   Cadastro Concluído    |
-//     ---------------------------
-//     `);
-
-//             emailGlobal = email;
-//             senhaGlobal = senha;
-
-//             console.log("Vamos direcionar você para o login!");
-//             login();
-//         } else {
-//             console.log('As senhas não coincidem.');
-//             console.log('Por favor, faça novamente o cadastro!');
-//             cadastro();
-//         }
-//     }
-
-//     // ==== LOGIN ====
-
-//     function login() {
-//         const email2 = prompt("Digite seu email: ");
-//         const senha3 = prompt("Digite sua senha: ");
-
-//         if (email2 === emailGlobal && senha3 === senhaGlobal) {
-//             console.log(`
-//     ---------------------------
-//     |     Login Concluído     |
-//     ---------------------------
-//     `);
-//             menu();
-//         } else {
-//             console.log('Email ou senha estão errados.');
-//             console.log('Por favor, tente novamente.');
-//             login();
-//         }
-//     }
-
-//     // ==== MENU PRINCIPAL ====
-
-//     function menu() {
-//         const opcao = prompt(`
-//     ----------------------------------------
-//     Saldo: R$ ${saldo}
-//     ----------------------------------------
-//     [1] Alugar bicicletas e patinetes
-//     [2] Ver seus aluguéis 
-//     [3] Perfil
-//     [4] Saldo da conta
-//     [5] Sair
-//     ----------------------------------------
-//     `);
-
-//         if (opcao == "1") {
-//             alugarBikes();
-//         } else if (opcao == "2") {
-//             verAlugueis();
-//         } else if (opcao == "3") {
-//             console.log("Função de perfil ainda não criada!");
-//             menu();
-//         } else if (opcao == "4") {
-//         mexerSaldo();
-//         } else if (opcao == "5") {
-//             console.log("Obrigado por usar a Eco Bike!");
-//         } else {
-//             console.log("Opção inválida!");
-//             menu();
-//         }
-//     }
-
-//     // ==== CATÁLOGO / ALUGUEL ====
-
-//     function alugarBikes() {
-//         console.clear();
-
-//         console.log(`
-//     =====================================================
-//             🚲  CATÁLOGO ECO BIKE  🚲
-//     =====================================================
-
-//     [1] Bike Urbana Classic  - R$ 4,00 / 1h
-//     [2] Bike Mountain Pro    - R$ 5,50 / 1h
-//     [3] E-Bike City Plus ⚡   - R$ 8,00 / 1h
-//     [4] Patinete EcoRide ⚡   - R$ 5,00 / 1h
-//     [5] Patinete Urban Pro ⚡ - R$ 6,50 / 1h
-//     =====================================================
-//     `);
-
-//         let num = prompt("Digite o número do veículo que deseja alugar: ");
-//         let tempo = prompt('Digite o tempo que você vai usar (horas): ');
-
-//         // transforma em número
-//         num = parseInt(num);
-//         tempo = parseInt(tempo);
-
-//         if (num < 1 || num > 5) {
-//             console.log("Número inválido!");
-//             return alugarBikes();
-//         }
-
-//         if (tempo <= 0) {
-//             console.log("Tempo inválido!");
-//             return alugarBikes();
-//         }
-
-//         let preco = 0;
-//         let nome = "";
-
-//         if (num == 1) { preco = 4; nome = "Bike Urbana Classic"; }
-//         if (num == 2) { preco = 5.5; nome = "Bike Mountain Pro"; }
-//         if (num == 3) { preco = 8; nome = "E-Bike City Plus ⚡"; }
-//         if (num == 4) { preco = 5; nome = "Patinete EcoRide ⚡"; }
-//         if (num == 5) { preco = 6.5; nome = "Patinete Urban Pro ⚡"; }
-
-//         let total = preco * tempo;
-
-//         if (saldo >= total) {
-//             lista.push(`${nome} - R$ ${preco} / ${tempo}h`);
-//             saldo = saldo - total;
-//             console.log("Alugado com sucesso!");
-//         } else {
-//             console.log('Saldo insuficiente!');
-//             return alugarBikes();
-//         }
-
-//         menu();
-//     }
-
-//     // ==== VER ALUGUÉIS ====
-
-//     function verAlugueis() {
-//         console.clear();
-
-//         if (lista.length === 0) {
-//             console.log("Você não tem veículos alugados no momento.");
-//             return menu();
-//         }
-
-//         console.log("Seus aluguéis atuais:");
-//         console.log(lista);
-
-//         const opt = prompt(`
-//     --------------------------------
-//     [1] Cancelar um aluguel 
-//     [2] Voltar ao menu
-//     --------------------------------
-//     `);
-
-//         if (opt == "1") {
-//             const i = parseInt(prompt("Digite a posição do veículo que deseja remover: "));
-
-//             if (i < 1 || i > lista.length) {
-//                 console.log("Posição inválida!");
-//                 return verAlugueis();
-//             }
-
-//             lista.splice(i - 1, 1);
-//             console.log("Seu aluguel foi cancelado com sucesso!");
-//             menu();
-
-//         } else if (opt == "2") {
-//             menu();
-//         } else {
-//             console.log("Valor inválido!");
-//             verAlugueis();
-//         }
-//     }
-
-//     // ==== MEXER NO SALDO ====
-
-//     function mexerSaldo() {
-
-//         const o = prompt(`
-//     -------------------------------------
-//     [1] Adicionar Saldo
-//     [2] Remover Saldo
-//     -------------------------------------
-//     `);
-
-//         if (o == "1") {
-//             const valor = parseFloat(prompt("Quanto deseja depositar? "));
-
-//             if (valor <= 0) {
-//                 console.log("Valor inválido!");
-//                 return mexerSaldo();
-//             }
-
-//             saldo = saldo + valor;
-//             console.log("Saldo adicionado com sucesso!");
-
-//         } else if (o == "2") {
-//             const valor = parseFloat(prompt("Quanto deseja retirar? "));
-
-//             if (valor <= 0) {
-//                 console.log("Valor inválido!");
-//                 return mexerSaldo();
-//             }
-
-//             if (valor > saldo) {
-//                 console.log("Saldo insuficiente!");
-//                 return mexerSaldo();
-//             }
-
-//             saldo = saldo - valor;
-//             console.log("Saldo removido com sucesso!");
-
-//         } else {
-//             console.log("Opção inválida!");
-//             return mexerSaldo();
-//         }
-
-//         menu();
-//     }
-// }
+module.exports = {
+    loadDB,
+    saveDB,
+    getNextId
+};
