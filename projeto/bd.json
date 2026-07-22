@@ -117,6 +117,15 @@
             "senha": "123",
             "saldo": 15,
             "alugueis": []
+        },
+        {
+            "id": 5,
+            "nome": "Enzo",
+            "email": "enzo123@gmail.com",
+            "cpf": "12312312334",
+            "senha": "121212",
+            "saldo": 0,
+            "alugueis": []
         }
     ],
     "corridas": [

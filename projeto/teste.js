@@ -54,6 +54,13 @@ function getNextId(lista) {
     return maxId + 1;
 }
 
+// Helper para verificar se a entrada do usuário solicita a ação de voltar
+function eOpcaoVoltar(input) {
+    if (typeof input !== 'string') return false;
+    const str = input.trim().toLowerCase();
+    return str === '0' || str === 'voltar' || str === 'v' || str === 'cancelar';
+}
+
 // ==================================
 // ===== APLICAÇÃO ECO BIKE (CLI) =====
 // ==================================
@@ -74,10 +81,16 @@ function main() {
 =====================================================
 [1] Login
 [2] Cadastrar novo usuário
-[3] Sair do Sistema
+[0] Sair do Sistema
 =====================================================
 `);
             const opcao = prompt("Escolha uma opção: ");
+
+            if (eOpcaoVoltar(opcao)) {
+                console.log("\nObrigado por usar a Eco Bike! Até mais.");
+                rodando = false;
+                break;
+            }
 
             switch (opcao) {
                 case "1":
@@ -85,10 +98,6 @@ function main() {
                     break;
                 case "2":
                     cadastro();
-                    break;
-                case "3":
-                    console.log("\nObrigado por usar a Eco Bike! Até mais.");
-                    rodando = false;
                     break;
                 default:
                     console.log("\nOpção inválida!");
@@ -107,10 +116,17 @@ Saldo Atual: R$ ${saldo.toFixed(2)}
 [2] Meus aluguéis / Devolução
 [3] Ver Perfil
 [4] Gerenciar Saldo (Adicionar/Remover)
-[5] Sair da conta (Logout)
+[0] Sair da conta (Logout)
 =====================================================
 `);
             const opcao = prompt("Escolha uma opção: ");
+
+            if (eOpcaoVoltar(opcao)) {
+                console.log(`\nLogout efetuado com sucesso! Até logo, ${currentUser.nome}.`);
+                currentUser = null;
+                prompt("Pressione ENTER para continuar...");
+                continue;
+            }
 
             switch (opcao) {
                 case "1":
@@ -125,11 +141,6 @@ Saldo Atual: R$ ${saldo.toFixed(2)}
                 case "4":
                     mexerSaldo();
                     break;
-                case "5":
-                    console.log(`\nLogout efetuado com sucesso! Até logo, ${currentUser.nome}.`);
-                    currentUser = null;
-                    prompt("Pressione ENTER para continuar...");
-                    break;
                 default:
                     console.log("\nOpção inválida!");
                     prompt("Pressione ENTER para continuar...");
@@ -142,15 +153,18 @@ Saldo Atual: R$ ${saldo.toFixed(2)}
 function cadastro() {
     console.clear();
     console.log("=== CADASTRO DE NOVO USUÁRIO ===");
+    console.log("(Digite '0' a qualquer momento para cancelar e voltar)\n");
 
-    const nome = prompt("Digite seu nome completo: ").trim();
+    const nome = prompt("Digite seu nome completo (ou 0 para voltar): ").trim();
+    if (eOpcaoVoltar(nome)) return;
     if (!nome) {
         console.log("Nome inválido!");
         prompt("Pressione ENTER para voltar...");
         return;
     }
 
-    const email = prompt("Digite seu email: ").trim().toLowerCase();
+    const email = prompt("Digite seu email (ou 0 para voltar): ").trim().toLowerCase();
+    if (eOpcaoVoltar(email)) return;
     if (!email) {
         console.log("Email inválido!");
         prompt("Pressione ENTER para voltar...");
@@ -164,9 +178,14 @@ function cadastro() {
         return;
     }
 
-    const cpf = prompt("Digite seu CPF: ").trim();
-    const senha = prompt("Digite sua senha: ");
-    const senha2 = prompt("Digite novamente sua senha: ");
+    const cpf = prompt("Digite seu CPF (ou 0 para voltar): ").trim();
+    if (eOpcaoVoltar(cpf)) return;
+
+    const senha = prompt("Digite sua senha (ou 0 para voltar): ");
+    if (eOpcaoVoltar(senha)) return;
+
+    const senha2 = prompt("Digite novamente sua senha (ou 0 para voltar): ");
+    if (eOpcaoVoltar(senha2)) return;
 
     if (senha !== senha2 || !senha) {
         console.log("As senhas não coincidem ou estão vazias!");
@@ -201,14 +220,17 @@ function cadastro() {
 function login() {
     console.clear();
     console.log("=== LOGIN ===");
+    console.log("(Digite '0' a qualquer momento para voltar ao menu inicial)\n");
 
-    const email = prompt("Digite seu email: ").trim().toLowerCase();
-    const senha = prompt("Digite sua senha: ");
+    const email = prompt("Digite seu email (ou 0 para voltar): ").trim().toLowerCase();
+    if (eOpcaoVoltar(email)) return;
+
+    const senha = prompt("Digite sua senha (ou 0 para voltar): ");
+    if (eOpcaoVoltar(senha)) return;
 
     const usuario = db.usuarios.find(u => u.email && u.email.toLowerCase() === email && u.senha === senha);
 
     if (usuario) {
-        // Garantir campos padronizados
         if (!Array.isArray(usuario.alugueis)) usuario.alugueis = [];
         if (typeof usuario.saldo !== 'number') usuario.saldo = Number(usuario.saldo) || 0;
 
@@ -237,7 +259,7 @@ function verPerfil() {
     console.log(`Saldo: R$ ${Number(currentUser.saldo || 0).toFixed(2)}`);
     console.log(`Veículos alugados ativos: ${currentUser.alugueis ? currentUser.alugueis.length : 0}`);
     
-    prompt("\nPressione ENTER para voltar ao menu...");
+    prompt("\nPressione [0] ou ENTER para voltar ao menu...");
 }
 
 // ===== ALUGAR BIKES =====
@@ -261,12 +283,12 @@ function alugarBikes() {
 [3] E-Bike City Plus ⚡   - R$ 8,00 / 1h
 [4] Patinete EcoRide ⚡   - R$ 5,00 / 1h
 [5] Patinete Urban Pro ⚡ - R$ 6,50 / 1h
-[6] Cancelar / Voltar
+[0] Cancelar / Voltar
 =====================================================
 `);
 
-    const numInput = prompt("Escolha o número do veículo (1-5): ");
-    if (numInput === "6") return;
+    const numInput = prompt("Escolha o número do veículo (1-5 ou 0 para Voltar): ").trim();
+    if (eOpcaoVoltar(numInput)) return;
 
     const num = Number(numInput);
     if (isNaN(num) || num < 1 || num > 5) {
@@ -275,9 +297,10 @@ function alugarBikes() {
         return;
     }
 
-    const tempoInput = prompt("Digite a duração do aluguel (horas): ");
-    const tempo = Number(tempoInput);
+    const tempoInput = prompt("Digite a duração do aluguel em horas (ou 0 para Voltar): ").trim();
+    if (eOpcaoVoltar(tempoInput)) return;
 
+    const tempo = Number(tempoInput);
     if (isNaN(tempo) || tempo <= 0) {
         console.log("\nTempo de uso inválido!");
         prompt("Pressione ENTER...");
@@ -294,7 +317,6 @@ function alugarBikes() {
         return;
     }
 
-    // Debita o valor e adiciona ao histórico do usuário e do DB
     currentUser.saldo = saldoAtual - total;
     if (!Array.isArray(currentUser.alugueis)) currentUser.alugueis = [];
 
@@ -308,7 +330,6 @@ function alugarBikes() {
 
     currentUser.alugueis.push(novoAluguel);
 
-    // Registra a corrida no histórico global
     if (!Array.isArray(db.corridas)) db.corridas = [];
     db.corridas.push({
         id: getNextId(db.corridas),
@@ -351,15 +372,18 @@ function devolverAluguel() {
     console.log(`
 --------------------------------------
 [1] Devolver um veículo
-[2] Voltar ao menu principal
+[0] Voltar ao menu principal
 --------------------------------------
 `);
 
     const opcao = prompt("Escolha uma opção: ");
-    if (opcao === "1") {
-        const posInput = prompt("Digite o número do item que deseja devolver: ");
-        const pos = Number(posInput);
+    if (eOpcaoVoltar(opcao)) return;
 
+    if (opcao === "1") {
+        const posInput = prompt("Digite o número do item que deseja devolver (ou 0 para Voltar): ").trim();
+        if (eOpcaoVoltar(posInput)) return;
+
+        const pos = Number(posInput);
         if (isNaN(pos) || pos < 1 || pos > currentUser.alugueis.length) {
             console.log("\nPosição inválida!");
             prompt("Pressione ENTER...");
@@ -392,12 +416,12 @@ Saldo Atual: R$ ${saldoAtual.toFixed(2)}
 -------------------------------------
 [1] Adicionar Saldo (Depósito)
 [2] Remover Saldo (Saque)
-[3] Voltar ao Menu
+[0] Voltar ao Menu
 =====================================
 `);
 
     const o = prompt("Escolha uma opção: ");
-    if (o === "3") return;
+    if (eOpcaoVoltar(o)) return;
 
     if (o !== "1" && o !== "2") {
         console.log("\nOpção inválida!");
@@ -405,9 +429,10 @@ Saldo Atual: R$ ${saldoAtual.toFixed(2)}
         return;
     }
 
-    const valorInput = prompt("Digite o valor (R$): ");
-    const valor = Number(valorInput);
+    const valorInput = prompt("Digite o valor em R$ (ou 0 para Voltar): ").trim();
+    if (eOpcaoVoltar(valorInput)) return;
 
+    const valor = Number(valorInput);
     if (isNaN(valor) || valor <= 0) {
         console.log("\nValor inválido! Digite um número positivo.");
         prompt("Pressione ENTER...");
